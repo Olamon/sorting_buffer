@@ -1,0 +1,64 @@
+\section{OPT with smaller buffer}
+We have $\mathrm{OPT_k}$ with buffer of size $k$. We divide input sequence 
+$\sigma$ into phases. They 
+contain $\frac{c \cdot k}{2}$ consecutive requests each, are disjoint and form 
+a 
+coverage of $\sigma$.
+\begin{lemma}
+Fix input sequence $\sigma$. There exists an offline algorithm \textbf{B} 
+for sorting buffer problem, which has cache of size $(1 + 
+\frac{c}{2}) \cdot k$, makes actions only after every phase and makes the same 
+moves as \textbf{OPT}. Its cost is $\mathrm{B}(\sigma) = O(1) \cdot 
+\mathrm{OPT_k}(\sigma)$.
+\label{lem:algorithm_B}
+\end{lemma}
+Let $b(f)$ denote the position of $B$ at the end of phase $f$. During phase 
+$f$, \textbf{B} moves from point $b(f-1)$ to point $b(f)$ and it clears some 
+interval $B(f)$ that includes interval $[min(b(f-1), b(f)), max(b(f-1), 
+b(f))]$.
+Define \textit{pure buckets} $h^r_i$ and $h^l_i$, $i \in \mathbb{N}$, for a 
+given point on line $p$. Pure bucket 
+$h^r_i$, consists of points on the right hand side of $p$, whose 
+distance 
+from $p$ is more then $2^{|i| - 1}$ but less or equal then $2^i$. For $h^l_i$ 
+we have similar definition, but the points are taken from the 
+left side of $p$. For $i=0$, $h^r_0 = h^l_0 = h_0$ we have special bucket. It 
+contains only point $p$. Now we define \textit{buckets} (not pure) 
+$h'^r_i$ and $h'^l_i$ for point $p$. They are differ from pure buckets in a 
+way, that $i$-th bucket's size can differ from corresponding $i$-th pure bucket 
+size at most by factor $2$, so $\frac{1}{2} \leq \frac{|h'^r_i|}{|h^r_i|} \leq 
+2$ (similar for 'left' buckets). From now on this inequality will be called 
+\textit{bucket invariant}.
+\begin{observe}
+Let $p$ be the point of $\mathrm{OPT_k}$ at the start of phase $f$. Let $A(f)$ 
+be 
+the set of buckets $b_i$ that were visited by $\mathrm{OPT_k}$ during phase $f$ 
+(the 
+'largest index' buckets might have been visited only partially. Sum of sets in 
+$A(j)$ 
+forms continuous section. Moreover, $$\mathrm{OPT_k}(f) \geq \sum_{b_i \in 
+A(f)} |b_i|.$$
+\end{observe}
+The algorithm for \textbf{B} is duplicating the $\mathrm{OPT_k}$ moves during 
+one phase. When $\mathrm{OPT_k}$ changes its position, the buckets would not be 
+distributed as described previously. We want to introduce algorithm 
+\textbf{C} based on algorithm \textbf{B}. Recall, $B(f)$ for phase $f$ is 
+continuous interval. In phase $f$, instead of $B(f)$, algorithm \textbf{C} will 
+clear buckets' set $C(F) \supseteq B(f)$ (these buckets are defined with 
+respect to $b(f-1)$). It then moves to point $b(f)$ and reorganizes buckets in 
+the interval $C(f)$, so they fulfill the bucket invariant with respect to 
+point $b(f)$. 
+\begin{lemma}
+We can define $C(f)$, that summing over all phases $\sum_{f - phase} |C(f)| = 
+O(1) \cdot \sum_{f - phase} |B(f)|$. What is more, inside 
+$C(f)$ \textbf{C} changes buckets, so they fulfill 
+buckets' invariant after every change of 
+\textbf{C} position in phase, which is the same as \textbf{B}'s position. Cost 
+of bucket reorganization in all phases can be bounded 
+by $O(1) \cdot \sum_{f-phase} C(f)$.
+\end{lemma}
+\begin{theorem}
+ For any input sequence $\sigma$, $ \log(k) \cdot \mathrm{OPT_k}(\sigma) \leq
+C(f)$.
+\end{theorem}
+
