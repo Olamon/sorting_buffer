@@ -1,13 +1,18 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{amsthm}
-\usepackage{amsmath}
+\usepackage{amsthm,amssymb,amsmath,marginnote}
+\DeclareMathOperator \Opt {\textbf{OPT}}
+\DeclareMathOperator \Fazowy {\textbf{B}}
+
+\newcommand \opt {\ensuremath{\Opt}}
+\newcommand \fazowy {\ensuremath{\Fazowy}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{observe}[theorem]{Observation}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
 
 \title{Sorting buffer}
 \author{}
