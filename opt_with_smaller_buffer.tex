@@ -1,21 +1,18 @@
 \section{OPT with smaller buffer}
-We have $\mathrm{OPT_k}$ with buffer of size $k$. We divide input sequence 
-$\sigma$ into phases. They 
-contain $\frac{c \cdot k}{2}$ consecutive requests each, are disjoint and form 
-a 
-coverage of $\sigma$.
-\begin{lemma}
-Fix input sequence $\sigma$. There exists an offline algorithm \textbf{B} 
-for sorting buffer problem, which has cache of size $(1 + 
-\frac{c}{2}) \cdot k$, makes actions only after every phase and makes the same 
-moves as \textbf{OPT}. Its cost is $\mathrm{B}(\sigma) = O(1) \cdot 
-\mathrm{OPT_k}(\sigma)$.
-\label{lem:algorithm_B}
+We have $\opt_k$ with buffer of size $k$. We divide input sequence $\sigma$ into
+phases. They contain $\frac{c \cdot k}{2}$ consecutive requests each, are
+disjoint and form a coverage of $\sigma$.
+
+\begin{lemma}\label{lem:algorithm_B}
+There exists an offline algorithm \fazowy{} for sorting buffer problem, which
+has cache of size $(1 + \frac{c}{2}) \cdot k$, makes actions only after every
+phase and makes the same moves as \opt{}. For any input sequence $\sigma$, its
+cost is $\fazowy(\sigma) = O(1) \cdot \opt_k(\sigma)$.
 \end{lemma}
+
 \begin{proof}
- Let $x_\text{i}$ and $x_\text{f}$ respectively be the location of \opt{} at 
-the 
-beginning and the end of the phase, and $x_\text{min}$ and $x_\text{max}$ 
+Let $x_\text{i}$ and $x_\text{f}$ respectively be the location of \opt{} at 
+the beginning and the end of the phase, and $x_\text{min}$ and $x_\text{max}$ 
 respectively be the leftmost and rightmost points visited by \opt{} during the 
 phase.
 
@@ -45,88 +42,103 @@ new phase, \fazowy{} is at $x_\text{f}$, the same location as \opt, so both
 invariants of \fazowy{} are maintained and it may proceed to the next phase. 
 Finally, the distance covered by \fazowy{} is not larger than the distance 
 covered by \opt{}, and thus
-\[ \fazowy(\sigma) \leq \opt(\sigma) \]
+\[ \fazowy(\sigma) \leq \opt(\sigma). \qedhere \]
 \end{proof}
 
-Let $b(f)$ denote the position of $B$ at the end of phase $f$. During phase 
-$f$, \textbf{B} moves from point $b(f-1)$ to point $b(f)$ and it clears some 
-interval $B(f)$ that includes interval $[min(b(f-1), b(f)), max(b(f-1), 
+Let $b(f)$ denote the position of \fazowy{} at the end of phase $f$. During
+phase $f$, \fazowy{} moves from point $b(f-1)$ to point $b(f)$ and it clears
+some interval $B(f)$ that includes interval $[\min(b(f-1), b(f)), \max(b(f-1),
 b(f))]$.
+
 \begin{definition}
-\textbf{Regular buckets centered in $\mathbf{p}$}, denoted by $h^r_i$ and 
-$h^l_i$, $i \in \mathbb{N}$,  are defined as follows: 
-$h^r_i$, consists of points on the right hand side of $p$, whose 
-distance 
-from $p$ is more or equal to $2^{|i| - 1}$ but less then $2^i$. 
-For $h^l_i$ points are taken from the left side of $p$ and defined the same 
-way. For $i=0$, $h^r_0 = h^l_0 = h_0$ we have special bucket. It contains only 
-point $p$.
+A \emph{bucket arrangement centered in $p$} is a partition of the line into
+consecutive segments $\{b_i^\text{L},b_0,b_i^\text{R}\}$ such that,
+additionally, $b_0$ contains only point $p$, the \emph{origin} of the
+arrangement. Assume $b_0^\text{L}=b_0^\text{R}=b_0$.
 
-\textbf{Distorted buckets centered in $\mathbf{p}$}, $h'^r_i$ and $h'^l_i$,  
-differ from regular buckets in size. Specifically, $i$-th bucket's size can 
-differ from corresponding $i$-th regular bucket 
-size at most by factor $2$, so $\frac{1}{2} \leq \frac{|h'^r_i|}{|h^r_i|} \leq 
-2$ (similar for 'left' buckets). From now on this inequality will be called 
-\textbf{bucket invariant}.
+A bucket arrangement is \emph{regular} (or consists of regular buckets) if the
+$i$-th buckets on either side ($b_i^\text{L},b_i^\text{R}$) have size exactly
+$2^i$, except possibly for the leftmost and rightmost buckets, which may be
+smaller. A bucket arrangement which is not regular is \emph{perturbed} (or
+consists of perturbed buckets).
+
+A bucket arrangement fulfills \emph{bucket invariant} if the size of
+$b_i^\text{L},b_i^\text{R}$ deviates from the size of corresponding regular
+bucket only by a constant factor, ie.\ $l\cdot2^i\leq|b_i|\leq
+h\cdot2^i$,\marginnote{Set $h,l$.} except possibly for the leftmost and
+rightmost buckets, for which only the upper bound needs to hold.
+%
+%\textbf{Regular buckets centered in $\mathbf{p}$}, denoted by $h^r_i$ and
+%$h^l_i$, $i \in \mathbb{N}$, are defined as follows: $h^r_i$, consists of
+%points on the right hand side of $p$, whose distance from $p$ is more or equal
+%to $2^{|i| - 1}$ but less then $2^i$. For $h^l_i$ points are taken from the
+%left side of $p$ and defined the same way. For $i=0$, $h^r_0 = h^l_0 = h_0$ we
+%have special bucket. It contains only point $p$.
+%
+%\textbf{Distorted buckets centered in $\mathbf{p}$}, $h'^r_i$ and $h'^l_i$,
+%differ from regular buckets in size. Specifically, $i$-th bucket's size can
+%differ from corresponding $i$-th regular bucket size at most by factor $2$, so
+%$\frac{1}{2} \leq \frac{|h'^r_i|}{|h^r_i|} \leq 2$ (similar for 'left'
+%buckets). From now on this inequality will be called \textbf{bucket invariant}.
 \end{definition}
-\begin{observe}
-Let $p$ be the point of $\mathrm{OPT_k}$ at the start of phase $f$. Let $A(f)$ 
-be 
-the set of distorted buckets that were visited by $\mathrm{OPT_k}$ during 
-phase $f$ 
-(the 
-largest index right and left bucket might have been visited only partially). 
-Sum of sets in 
-$A(j)$ 
-forms continuous section. Moreover, $$\mathrm{OPT_k}(f) \geq O(1) 
-\cdot \sum_{b \in 
-A(f)} |b|.$$
-\end{observe}
-\begin{proof}
- First note that if the bucket arrangement $\{b_i\}$ fulfills the bucket 
-invariant, then any bucket is at most four times as large as the distance from 
-the origin to its beginning.\marginnote{Cichaczem wprowadzam nowe pojęcie --- 
-orydżyn arendżmentu bakietów.} Indeed, for $m$-th bucket this distance equals to
 
-\[ \sum_{i=0}^{m-1}|b_i| \geq 1+1+\sum_{i=2}^{m-1}\tfrac12\cdot2^{i-1}
-                            = 1+2^{m-2} = 1+\tfrac14\cdot2\cdot2^{m-1}
-                         \geq 1+\tfrac14|b_m| \]
-so $|b_m|<4\sum_{i=0}^{m-1}|b_i|$.
+We almost always consider bucket arrangements that fulfill the bucket invariant.
+
+\begin{observe}
+Let $p$ be the point of $\opt_k$ at the start of phase $f$. Let $A(f)$ be the
+set of distorted buckets that were visited by $\opt_k$ during phase $f$ (the
+rightmost and leftmost buckets are not, in general, traversed throughout). Sum
+of sets in $A(j)$ forms continuous section. Moreover,
+\[\opt_k(f) \geq O(1) \cdot \sum_{b \in A(f)} |b|.\]
+\end{observe}
+
+\begin{proof}
+First note that if the bucket arrangement $\{b_i\}$ fulfills the bucket
+invariant, then any bucket is at most four times as large as the distance from
+the origin to its beginning. Indeed, for $m$-th bucket on, say, the right this
+distance equals to
+\[ \sum_{i=0}^{m-1}|b_i^\text{R}| \geq 1 +  l\sum_{i=1}^{m-1}2^i = 1+l(2^m-2)
+                                  \geq 1 - 2l + l\cdot\frac{|b_m^\text{R}|}h \]
+so $|b_m^\text{R}|\leq\frac hl\sum_{i=0}^{m-1}|b_i^\text{R}|$.\marginnote{Needs
+slight fixing if $l>\frac12$.}
 
 Let $d_\text{R}$ be the distance from the origin to the rightmost point visited 
 by \opt{} in a phase and $m$ be the index of the bucket containing that point. 
 The total size of the right-hand-side buckets visited by \opt{} is thus
-\[ \sum_{i=1}^m|b_i^\text{R}| = \sum_{i=1}^{m-1}|b_i^\text{R}|+|b_m^\text{R}|
-                              < 5\sum_{i=1}^{m-1}|b_i^\text{R}|
-                           \leq 5d_\text{R} \]
+\[ \sum_{i=0}^m|b_i^\text{R}| = \sum_{i=0}^{m-1}|b_i^\text{R}|+|b_m^\text{R}|
+                           \leq (\tfrac hl + 1)\sum_{i=0}^{m-1}|b_i^\text{R}|
+                           \leq \tfrac{h+l}l\cdot d_\text{R} \]
 Similarly, for $d_\text{L}$ being the distance from the origin to the leftmost 
 point visited by \opt{} and $m'$ the index of the bucket containing it, we get 
-$\sum_{i=1}^{m'}|b_i^\text{L}| < 5d_\text{L}$. Putting those together, we obtain
-\[ \sum_{b_i\in A(f)}|b_i| = \sum_{i=1}^{m}|b_i^\text{R}| + 1
-                           + \sum_{i=1}^{m'}|b_i^\text{L}|
-                           < 5d_\text{R} + 1 + 5d_\text{L} \]
-and thus, $5\opt{}(f)\geq5(d_\text{L}+d_\text{R})\geq\sum_{b_i\in A(f)}|b_i|$.
+$\sum_{i=0}^{m'}|b_i^\text{L}| \leq \tfrac{h+l}l\cdot d_\text{L}$. Putting those
+together, we obtain
+\[ \sum_{b\in A(f)}|b| \leq \sum_{i=0}^{m}|b_i^\text{R}|
+                          + \sum_{i=0}^{m'}|b_i^\text{L}|
+                       \leq \tfrac{h+l}l\cdot d_\text{R}
+                          + \tfrac{h+l}l\cdot d_\text{L} \]
+and thus, $\tfrac{h+l}l\opt{}(f)\geq\tfrac{h+l}l(d_\text{L}+d_\text{R})
+\geq\sum_{b_i\in A(f)}|b_i|$.
 \end{proof}
 
-The algorithm for \textbf{B} is duplicating the $\mathrm{OPT_k}$ moves during 
-one phase. When $\mathrm{OPT_k}$ changes its position, the buckets would not be 
+The algorithm for \fazowy{} is duplicating the $\opt_k$ moves during 
+one phase. When $\opt_k$ changes its position, the buckets would not be 
 distributed as described previously. We want to introduce algorithm 
-\textbf{C}, which will a modification of algorithm \textbf{B}. Recall, $B(f)$ 
+\przesuw, which is a modification of algorithm \fazowy. Recall, $B(f)$ 
 for phase $f$ is continuous interval. In phase $f$, instead of $B(f)$, 
-algorithm \textbf{C} will clear buckets' set $C(F) \supseteq B(f)$ (these 
+algorithm \przesuw{} will clear buckets' set $C(F) \supseteq B(f)$ (these 
 distorted buckets are centered in $b(f-1)$). It then moves to point $b(f)$ and 
 reorganizes buckets in the interval $C(f)$, so they fulfill the invariant for 
 distorted buckets centered in $b(f)$. 
+
 \begin{lemma}
 We can define $C(f)$ in such a way, that summing over all phases $\sum_{f - 
 phase} |C(f)| = O(1) \cdot \sum_{f - phase} |B(f)|$. What is more, inside 
-$C(f)$, \textbf{C} changes buckets, so they fulfill invariant after 
-every change of \textbf{C} position. The positions of \textbf{C} are at the end 
-of phase are the same as \textbf{B}'s positions. Cost of bucket reorganization 
+$C(f)$, \przesuw{} changes buckets, so they fulfill invariant after 
+every change of \przesuw{} position. The positions of \przesuw{} are at the end 
+of phase are the same as positions of \fazowy. Cost of bucket reorganization 
 in all phases can be bounded by $O(1) \cdot \sum_{f-phase} C(f)$.
 \end{lemma}
-\begin{theorem}
-For any input sequence $\sigma$, $ \log(k) \cdot \mathrm{OPT_k}(\sigma) \leq
-C(f)$.
-\end{theorem}
 
+\begin{theorem}
+For any input sequence $\sigma$, $\przesuw(\sigma)\leq O(\log k)\opt_k(\sigma)$.
+\end{theorem}

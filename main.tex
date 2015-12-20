@@ -1,18 +1,24 @@
 \documentclass[a4paper,10pt]{article}
+\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{amsfonts}
-\usepackage{amsthm,amssymb,amsmath,marginnote}
-\DeclareMathOperator \Opt {\textbf{OPT}}
-\DeclareMathOperator \Fazowy {\textbf{B}}
-
-\newcommand \opt {\ensuremath{\Opt}}
-\newcommand \fazowy {\ensuremath{\Fazowy}}
+\usepackage[OT4]{fontenc}
+\usepackage{amsfonts,amsthm,amssymb,amsmath}
+\usepackage{marginnote} % TODO usunąć przy sprzątaniu śmieci
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{observe}[theorem]{Observation}
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{observe}[theorem]{Observation}
+\renewcommand \qedsymbol {\ensuremath{\square}}
+
+\DeclareMathOperator \Opt {\mathbf{OPT}}
+\DeclareMathOperator \Fazowy {\mathbf{B}}
+\DeclareMathOperator \Przesuw {\mathbf{C}}
+\newcommand \opt {\ensuremath{\Opt}}
+\newcommand \fazowy {\ensuremath{\Fazowy}}
+\newcommand \przesuw {\ensuremath{\Przesuw}}
 
 \title{Sorting buffer}
 \author{}
