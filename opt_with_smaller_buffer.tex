@@ -6,7 +6,7 @@ disjoint and form a coverage of $\sigma$.
 \begin{lemma}\label{lem:algorithm_B}
 There exists an offline algorithm \fazowy{} for sorting buffer problem, which
 has cache of size $(1 + \frac{c}{2}) \cdot k$, makes actions only after every
-phase and makes the same moves as \opt{}. For any input sequence $\sigma$, its
+phase and makes the same moves as $\opt_k$. For any input sequence $\sigma$, its
 cost is $\fazowy(\sigma) = O(1) \cdot \opt_k(\sigma)$.
 \end{lemma}
 
@@ -41,8 +41,7 @@ subset of the buffer of \opt. Also at this moment, which is the beginning of a
 new phase, \fazowy{} is at $x_\text{f}$, the same location as \opt, so both 
 invariants of \fazowy{} are maintained and it may proceed to the next phase. 
 Finally, the distance covered by \fazowy{} is not larger than the distance 
-covered by \opt{}, and thus
-\[ \fazowy(\sigma) \leq \opt(\sigma). \qedhere \]
+covered by \opt{}, and thus $\fazowy(\sigma) \leq \opt(\sigma)$.
 \end{proof}
 
 Let $b(f)$ denote the position of \fazowy{} at the end of phase $f$. During
@@ -52,21 +51,21 @@ b(f))]$.
 
 \begin{definition}
 A \emph{bucket arrangement centered in $p$} is a partition of the line into
-consecutive segments $\{b_i^\text{L},b_0,b_i^\text{R}\}$ such that,
-additionally, $b_0$ contains only point $p$, the \emph{origin} of the
-arrangement. Assume $b_0^\text{L}=b_0^\text{R}=b_0$.
+consecutive segments $\ldots, b_2^\text{L}, b_1^\text{L}, b_0^\text{L} = b_0 =
+b_0^\text{R}, b_1^\text{R}, b_2^\text{R}, \ldots,$ such that $b_0$ contains only
+point $p$, the \emph{origin} of the arrangement.
 
 A bucket arrangement is \emph{regular} (or consists of regular buckets) if the
 $i$-th buckets on either side ($b_i^\text{L},b_i^\text{R}$) have size exactly
 $2^i$, except possibly for the leftmost and rightmost buckets, which may be
-smaller. A bucket arrangement which is not regular is \emph{perturbed} (or
-consists of perturbed buckets).
+smaller. A bucket arrangement which is not regular is \emph{distorted} (or
+consists of distorted buckets).
 
 A bucket arrangement fulfills \emph{bucket invariant} if the size of
 $b_i^\text{L},b_i^\text{R}$ deviates from the size of corresponding regular
 bucket only by a constant factor, ie.\ $l\cdot2^i\leq|b_i|\leq
 h\cdot2^i$,\marginnote{Set $h,l$.} except possibly for the leftmost and
-rightmost buckets, for which only the upper bound needs to hold.
+rightmost buckets, for which only the upper bounds need to hold.
 %
 %\textbf{Regular buckets centered in $\mathbf{p}$}, denoted by $h^r_i$ and
 %$h^l_i$, $i \in \mathbb{N}$, are defined as follows: $h^r_i$, consists of
@@ -86,10 +85,10 @@ We almost always consider bucket arrangements that fulfill the bucket invariant.
 
 \begin{observe}
 Let $p$ be the point of $\opt_k$ at the start of phase $f$. Let $A(f)$ be the
-set of distorted buckets that were visited by $\opt_k$ during phase $f$ (the
-rightmost and leftmost buckets are not, in general, traversed throughout). Sum
-of sets in $A(j)$ forms continuous section. Moreover,
-\[\opt_k(f) \geq O(1) \cdot \sum_{b \in A(f)} |b|.\]
+set of (possibly distorted) buckets that were visited by $\opt_k$ during phase
+$f$ (the rightmost and leftmost buckets are not, in general, traversed
+throughout). The sum of sets in $A(j)$ forms a continuous section. Moreover,
+$\sum_{b \in A(f)} |b| = O(1) \cdot \opt_k(f)$.
 \end{observe}
 
 \begin{proof}
@@ -115,20 +114,18 @@ together, we obtain
 \[ \sum_{b\in A(f)}|b| \leq \sum_{i=0}^{m}|b_i^\text{R}|
                           + \sum_{i=0}^{m'}|b_i^\text{L}|
                        \leq \tfrac{h+l}l\cdot d_\text{R}
-                          + \tfrac{h+l}l\cdot d_\text{L} \]
-and thus, $\tfrac{h+l}l\opt{}(f)\geq\tfrac{h+l}l(d_\text{L}+d_\text{R})
-\geq\sum_{b_i\in A(f)}|b_i|$.
+                          + \tfrac{h+l}l\cdot d_\text{L}
+                       \leq \tfrac{h+l}l\opt(f) \qedhere \]
 \end{proof}
 
-The algorithm for \fazowy{} is duplicating the $\opt_k$ moves during 
-one phase. When $\opt_k$ changes its position, the buckets would not be 
-distributed as described previously. We want to introduce algorithm 
-\przesuw, which is a modification of algorithm \fazowy. Recall, $B(f)$ 
-for phase $f$ is continuous interval. In phase $f$, instead of $B(f)$, 
-algorithm \przesuw{} will clear buckets' set $C(F) \supseteq B(f)$ (these 
-distorted buckets are centered in $b(f-1)$). It then moves to point $b(f)$ and 
-reorganizes buckets in the interval $C(f)$, so they fulfill the invariant for 
-distorted buckets centered in $b(f)$. 
+The algorithm \fazowy{} is duplicating the $\opt_k$ moves during one phase. When
+$\opt_k$ changes its position, the buckets would not be distributed as described
+previously. We want to introduce algorithm \przesuw, which is a modification of
+algorithm \fazowy. Recall, $B(f)$ for phase $f$ is continuous interval. In phase
+$f$, instead of $B(f)$, algorithm \przesuw{} will clear buckets' set $C(F)
+\supseteq B(f)$ (these distorted buckets are centered in $b(f-1)$). It then
+moves to point $b(f)$ and reorganizes buckets in the interval $C(f)$, so they
+fulfill the invariant for distorted buckets centered in $b(f)$. 
 
 \begin{lemma}
 We can define $C(f)$ in such a way, that summing over all phases $\sum_{f - 
